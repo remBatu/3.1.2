@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://thymeleaf.org"
+      lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Управление пользователями</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 900px;
+    }
+    .header-block {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #f5f5f5;
+      padding-bottom: 15px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 26px;
+      color: #333;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 14px;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background-color 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background-color: #007bff;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+    .btn-danger {
+      background-color: #dc3545;
+    }
+    .btn-danger:hover {
+      background-color: #bd2130;
+    }
+    .actions-group {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    th {
+      background-color: #f8fafc;
+      color: #4a5568;
+      font-weight: bold;
+    }
+    tr:hover {
+      background-color: #f8fafc;
+    }
+    .role-badge {
+      display: inline-block;
+      background-color: #e2e8f0;
+      color: #4a5568;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 13px;
+      margin-right: 5px;
+      font-weight: bold;
+    }
+    .inline-form {
+      margin: 0;
+      display: inline;
+    }
+    .footer-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      border-top: 1px solid #eee;
+      padding-top: 25px;
+    }
+    .btn-logout {
+      display: inline-block;
+      width: 100%;
+      padding: 12px 0;
+      font-size: 16px;
+      color: white;
+      background-color: #dc3545;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+    .btn-logout:hover {
+      background-color: #bd2130;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header-block">
+    <h1>Список пользователей</h1>
+    <a th:href="@{/admin/newuser}" class="btn btn-primary">➕ Добавить пользователя</a>
+  </div>
+
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Имя</th>
+      <th>Возраст</th>
+      <th>Роли</th>
+      <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="userItem : ${users}">
+      <td th:text="${userItem.id}">1</td>
+      <td th:text="${userItem.name}">Имя</td>
+      <td th:text="${userItem.age}">0</td>
+      <td>
+        <th:block th:each="role : ${userItem.roles}">
+            <span th:switch="${role.authority}" class="role-badge">
+              <span th:case="'ROLE_ADMIN'">Администратор</span>
+              <span th:case="'ROLE_USER'">Пользователь</span>
+              <span th:case="*">Гость</span>
+            </span>
+        </th:block>
+      </td>
+      <td>
+        <div class="actions-group">
+          <a th:href="@{/admin/users/{id}(id=${userItem.id})}" class="btn btn-secondary">Изменить</a>
+          <form th:action="@{/admin/users/{id}(id=${userItem.id})}" method="post" class="inline-form"
+                th:onsubmit="return confirm('Вы уверены, что хотите удалить пользователя ' + [[${userItem.name}]] + '?');">
+            <input type="hidden" name="_method" value="DELETE"/>
+            <button type="submit" class="btn btn-danger">Удалить</button>
+          </form>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="footer-block">
+
+    <a th:href="@{/user}" style="color: #007bff; text-decoration: none; font-weight: bold; font-size: 16px;">👤 Мой профиль</a>
+
+    <div style="width: 100%; max-width: 400px;">
+      <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn-logout">Выйти из системы</button>
+      </form>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
