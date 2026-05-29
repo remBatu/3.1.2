@@ -158,7 +158,8 @@
       <td th:text="${userItem.age}">0</td>
       <td>
         <th:block th:each="role : ${userItem.roles}">
-            <span th:switch="${role.authority}" class="role-badge">
+          <!-- Изменено: th:switch использует поле .name объекта Role -->
+          <span th:switch="${role.name}" class="role-badge">
               <span th:case="'ROLE_ADMIN'">Администратор</span>
               <span th:case="'ROLE_USER'">Пользователь</span>
               <span th:case="*">Гость</span>

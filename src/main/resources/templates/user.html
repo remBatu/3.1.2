@@ -83,12 +83,14 @@
         <div class="info-item">
             <strong>Роли:</strong>
             <th:block th:each="role : ${user.roles}">
-                <span th:switch="${role.authority}" class="role-badge">
-            <span th:case="'ROLE_ADMIN'">Администратор</span>
-            <span th:case="'ROLE_USER'">Пользователь</span>
-        </span>
+                <!-- Изменено: th:switch теперь использует поле .name объекта Role -->
+                <span th:switch="${role.name}" class="role-badge">
+                    <span th:case="'ROLE_ADMIN'">Администратор</span>
+                    <span th:case="'ROLE_USER'">Пользователь</span>
+                </span>
             </th:block>
-    </div>
+        </div>
+    </div> <!-- Исправлено закрытие блока info-block -->
 
     <form th:action="@{/logout}" method="post">
         <button type="submit" class="btn-logout">Выйти из системы</button>

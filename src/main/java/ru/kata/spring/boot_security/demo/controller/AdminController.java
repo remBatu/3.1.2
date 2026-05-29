@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.kata.spring.boot_security.demo.dto.UserCreateDto;
+import ru.kata.spring.boot_security.demo.dto.UserUpdateDto;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
@@ -46,15 +48,15 @@ public class AdminController {
     }
 
     @PostMapping("/users")
-    public String addNewUser(@ModelAttribute("user") User user) {
-        userService.addUser(user);
+    public String addNewUser(@ModelAttribute("user") UserCreateDto userCreateDto) {
+        userService.addUser(userCreateDto);
         return "redirect:/admin/users";
     }
 
     @PutMapping("/users/{id}")
-    public String updateUser(@ModelAttribute("user") User changedUser, @PathVariable Long id) {
-        changedUser.setId(id);
-        userService.updateUser(changedUser);
+    public String updateUser(@ModelAttribute("user") UserUpdateDto userUpdateDto, @PathVariable Long id) {
+        userUpdateDto.setId(id);
+        userService.updateUser(userUpdateDto);
         return "redirect:/admin/users";
     }
 
