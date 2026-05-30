@@ -46,7 +46,6 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    @Column(name = "role_name")
     private Set<Role> roles;
 
     public User(String name, int age, String password, Set<Role> roles) {
