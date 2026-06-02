@@ -65,7 +65,12 @@ public class UserServiceImpl implements UserService {
         user.setName(dto.getName());
         user.setAge(dto.getAge());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setRoles(mapStringToRoles(dto.getRoles()));
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleRepository.getReferenceById(Role.USER_ID));
+        if (dto.getRoles() != null) {
+            dto.getRoles().forEach(id -> roles.add(roleRepository.getReferenceById(Long.parseLong(id))));
+        }
+        user.setRoles(roles);
         userRepository.save(user);
     }
 
@@ -76,7 +81,12 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(dto.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь с этим id не найден"));
         user.setName(dto.getName());
         user.setAge(dto.getAge());
-        user.setRoles(mapStringToRoles(dto.getRoles()));
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleRepository.getReferenceById(Role.USER_ID));
+        if (dto.getRoles() != null) {
+            dto.getRoles().forEach(id -> roles.add(roleRepository.getReferenceById(Long.parseLong(id))));
+        }
+        user.setRoles(roles);
         userRepository.save(user);
     }
 
@@ -84,18 +94,5 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
-    }
-
-    private Set<Role> mapStringToRoles(List<String> stringRoles) {
-        Set<Role> managedRoles = new HashSet<>();
-        for (String roleName : stringRoles) {
-            Optional<Role> dbRole = roleRepository.findByName(roleName);
-            dbRole.ifPresent(managedRoles::add);
-        }
-        if (managedRoles.isEmpty()) {
-            Optional<Role> defaultRole = roleRepository.findByName(defaultRoleName);
-            defaultRole.ifPresent(managedRoles::add);
-        }
-        return managedRoles;
     }
 }

@@ -39,16 +39,16 @@ public class AppInitializer implements CommandLineRunner {
         Role userRole = roleService.getRole(defaultRoleName);
         Role adminRole = roleService.getRole(adminRoleName);
         if (userRole == null) {
-            userRole = roleService.addRole(new Role(defaultRoleName));
+            roleService.addRole(new Role(Role.USER_ID, defaultRoleName));
         }
         if (adminRole == null) {
-            adminRole = roleService.addRole(new Role(adminRoleName));
+            roleService.addRole(new Role(Role.ADMIN_ID, adminRoleName));
         }
         UserCreateDto firstAdmin = new UserCreateDto();
         firstAdmin.setName(name);
         firstAdmin.setPassword(password);
         firstAdmin.setAge(30);
-        firstAdmin.setRoles(List.of(defaultRoleName,adminRoleName));
+        firstAdmin.setRoles(List.of(String.valueOf(Role.ADMIN_ID), String.valueOf(Role.USER_ID)));
         userService.addUser(firstAdmin);
         System.out.println("Администратор по умолчанию создан");
     }

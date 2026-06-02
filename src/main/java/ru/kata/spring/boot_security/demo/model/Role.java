@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,22 +16,20 @@ import org.springframework.security.core.GrantedAuthority;
 @Entity
 @Table(name = "roles")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
 public class Role implements GrantedAuthority {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public static final Long USER_ID = 1L;
+    public static final Long ADMIN_ID = 2L;
 
+    @Id
+    private Long id;
 
     @Column(unique = true, nullable = false)
     private String name;
-
-    public Role(String name) {
-        this.name = name;
-    }
 
     @Override
     public String getAuthority() {
